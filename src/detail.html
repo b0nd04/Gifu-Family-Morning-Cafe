@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店舗詳細 - Family Morning Cafe Gifu</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            orange: '#FFB347',
+                            yellow: '#FFCC33',
+                            green: '#77DD77',
+                            light: '#FFF9E6',
+                            text: '#4A4A4A'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Helvetica Neue"', 'Arial', '"Hiragino Kaku Gothic ProN"', '"Hiragino Sans"', 'Meiryo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-brand-text">
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center">
+            <a href="index.html" class="flex items-center text-gray-500 hover:text-brand-orange transition mr-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+            </a>
+            <h1 class="text-xl font-bold tracking-tight text-brand-orange">店舗詳細</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8" id="main-content">
+        <!-- Content will be injected here -->
+        <div id="loading" class="text-center py-12 text-gray-500">
+            読み込み中...
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center text-xs text-gray-500">
+            &copy; 2024 Family Morning Cafe Gifu. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainContent = document.getElementById('main-content');
+
+            // 1. Get ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const storeId = parseInt(urlParams.get('id'));
+
+            // 2. Fetch Data & Find Store
+            fetch('data.json')
+                .then(response => response.json())
+                .then(stores => {
+                    const store = stores.find(s => s.id === storeId);
+                    if (!store) {
+                        showError();
+                        return;
+                    }
+                    renderDetail(store);
+                })
+                .catch(err => {
+                    console.error(err);
+                    showError();
+                });
+
+            function showError() {
+                mainContent.innerHTML = `
+                    <div class="text-center py-12">
+                        <h2 class="text-2xl font-bold text-gray-400 mb-4">店舗が見つかりませんでした 😢</h2>
+                        <a href="index.html" class="text-brand-orange hover:underline">トップページに戻る</a>
+                    </div>
+                `;
+            }
+
+            function renderDetail(store) {
+                // Helper for Parking Size
+                const translateSize = (type) => {
+                    if (type === 'Large/Minivan') return '大型可';
+                    if (type === 'Normal') return '中型まで';
+                    if (type === 'Light only') return '軽推奨';
+                    return type;
+                };
+
+                // Section 1: Basic Info
+                const basicInfoHtml = `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                            <span class="mr-2">🏠</span>基本情報
+                        </h2>
+                        <dl class="space-y-4">
+                            <div class="flex flex-col sm:flex-row">
+                                <dt class="sm:w-32 font-bold text-gray-500 text-sm">店舗名</dt>
+                                <dd class="flex-1 font-bold text-lg text-gray-800">${store.name}</dd>
+                            </div>
+                            <div class="flex flex-col sm:flex-row">
+                                <dt class="sm:w-32 font-bold text-gray-500 text-sm">住所</dt>
+                                <dd class="flex-1 text-gray-700">${store.address}</dd>
+                            </div>
+                            <div class="flex flex-col sm:flex-row">
+                                <dt class="sm:w-32 font-bold text-gray-500 text-sm">電話番号</dt>
+                                <dd class="flex-1 text-gray-700">${store.tel}</dd>
+                            </div>
+                           <div class="flex flex-col sm:flex-row">
+                                <dt class="sm:w-32 font-bold text-gray-500 text-sm">営業時間</dt>
+                                <dd class="flex-1 text-gray-700">${store.business_hours}</dd>
+                            </div>
+                            <div class="flex flex-col sm:flex-row">
+                                <dt class="sm:w-32 font-bold text-gray-500 text-sm">モーニング</dt>
+                                <dd class="flex-1 font-bold text-brand-orange">${store.morning_hours}</dd>
+                            </div>
+                             <div class="flex flex-col sm:flex-row">
+                                <dt class="sm:w-32 font-bold text-gray-500 text-sm">定休日</dt>
+                                <dd class="flex-1 text-gray-700">${store.regular_holiday}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                `;
+
+                // Section 2: Parking Info
+                const parkingInfoHtml = `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                            <span class="mr-2">🚗</span>駐車場情報
+                        </h2>
+                        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6">
+                            <div>
+                                <dt class="font-bold text-gray-500 text-sm mb-1">台数</dt>
+                                <dd class="text-lg font-bold">${store.parking_count}台</dd>
+                            </div>
+                            <div>
+                                <dt class="font-bold text-gray-500 text-sm mb-1">広さ</dt>
+                                <dd class="text-lg font-bold text-gray-800">${translateSize(store.parking_size_type)}</dd>
+                            </div>
+                            <div>
+                                <dt class="font-bold text-gray-500 text-sm mb-1">停めやすさ</dt>
+                                <dd class="text-lg font-bold">
+                                    ${store.parking_difficulty === '易' ? '<span class="text-green-600">◎ 停めやすい</span>' :
+                        store.parking_difficulty === '普' ? '<span class="text-blue-600">○ 普通</span>' :
+                            '<span class="text-red-500">△ 難しい</span>'}
+                                </dd>
+                            </div>
+                            <div>
+                                <dt class="font-bold text-gray-500 text-sm mb-1">第二駐車場</dt>
+                                <dd class="text-gray-700">${store.has_second_parking ? 'あり' : 'なし'}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                `;
+
+                // Section 3: Kids & Wifi Info
+                let kidsMenuContent = store.kids_menu ? store.kids_menu : 'なし';
+                const kidsInfoHtml = `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                            <span class="mr-2">👶</span>お子様連れ・設備
+                        </h2>
+                         <dl class="space-y-4">
+                            <div class="flex items-center justify-between border-b border-gray-100 pb-2 last:border-0">
+                                <dt class="font-bold text-gray-700">キッズスペース</dt>
+                                <dd>${store.has_kids_space ? '<span class="text-green-600 font-bold">あり</span>' : '<span class="text-gray-400">なし</span>'}</dd>
+                            </div>
+                             <div class="flex items-center justify-between border-b border-gray-100 pb-2 last:border-0">
+                                <dt class="font-bold text-gray-700">キッズメニュー</dt>
+                                <dd class="text-right max-w-xs">${kidsMenuContent}</dd>
+                            </div>
+                            <div class="flex items-center justify-between border-b border-gray-100 pb-2 last:border-0">
+                                <dt class="font-bold text-gray-700">子供椅子</dt>
+                                <dd>${store.has_high_chair ? 'あり' : 'なし'}</dd>
+                            </div>
+                            <div class="flex items-center justify-between pt-2">
+                                <dt class="font-bold text-gray-700">Wi-Fi</dt>
+                                <dd>${store.has_wifi ? '<span class="text-brand-orange font-bold">あり 📶</span>' : 'なし'}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                `;
+
+                // Section 4: Map
+                const mapHtml = `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                         <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                            <span class="mr-2">📍</span>地図
+                        </h2>
+                        <p class="text-sm text-gray-500 mb-3">${store.map_address}</p>
+                        <div class="w-full h-64 bg-gray-200 rounded-lg overflow-hidden">
+                            <iframe 
+                                width="100%" 
+                                height="100%" 
+                                frameborder="0" 
+                                style="border:0" 
+                                src="https://maps.google.com/maps?q=${encodeURIComponent(store.map_address)}&output=embed" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                `;
+
+                // Assemble Main Layout
+                mainContent.innerHTML = `
+                    <!-- Hero Image -->
+                    <div class="aspect-video w-full relative rounded-2xl overflow-hidden shadow-md mb-8">
+                        <img src="${store.image}" alt="${store.name}" class="w-full h-full object-cover">
+                        <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-md shadow text-lg font-bold flex items-center">
+                            <span class="text-orange-400 mr-1">★</span> <span>${store.rating}</span>
+                        </div>
+                    </div>
+
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">${store.name}</h1>
+                    <p class="text-lg text-gray-600 mb-8">${store.description}</p>
+
+                    <!-- Info Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            ${basicInfoHtml}
+                        </div>
+                        <div>
+                            ${parkingInfoHtml}
+                            ${kidsInfoHtml}
+                        </div>
+                        <div>
+                            ${mapHtml}
+                        </div>
+                    </div>
+
+                    <div class="mt-8 text-center">
+                        <a href="index.html" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-bold rounded-full shadow-sm text-white bg-brand-orange hover:bg-orange-500 transition transform hover:-translate-y-0.5">
+                            一覧に戻る
+                        </a>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

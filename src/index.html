@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Morning Cafe Gifu ~家族のモーニング検索~</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            orange: '#FFB347',
+                            yellow: '#FFCC33',
+                            green: '#77DD77',
+                            light: '#FFF9E6',
+                            text: '#4A4A4A'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Helvetica Neue"', 'Arial', '"Hiragino Kaku Gothic ProN"', '"Hiragino Sans"', 'Meiryo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+        }
+
+        .hero-pattern {
+            background-color: #FFF9E6;
+            background-image: radial-gradient(#FFB347 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-brand-text">
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2 text-2xl font-bold tracking-tight text-brand-orange">
+                <span class="text-3xl">☕</span>
+                <span>Gifu Morning Info</span>
+            </a>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#" class="text-gray-600 hover:text-brand-orange font-medium transition">ホーム</a>
+                <a href="#" class="text-gray-600 hover:text-brand-orange font-medium transition">ランキング</a>
+                <a href="#" class="text-gray-600 hover:text-brand-orange font-medium transition">当サイトについて</a>
+            </nav>
+            <button class="md:hidden text-2xl">☰</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-pattern py-16 px-4 text-center">
+        <h1 class="text-3xl md:text-5xl font-extrabold mb-4 text-gray-800 leading-tight">
+            家族で<br class="md:hidden" />モーニングに行こう。
+        </h1>
+        <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            「駐車場が狭い...」「キッズメニューの有無を知りたい...」<br class="hidden md:inline" />
+            そんなパパ・ママの悩みを解決する、岐阜エリア特化型カフェ検索。
+        </p>
+    </section>
+
+    <!-- Search & Filter Section -->
+    <section class="py-8 bg-white border-b border-gray-100">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+                <span class="mr-2">🔍</span>条件で絞り込み
+            </h2>
+
+            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                <div class="flex flex-col md:flex-row gap-6">
+
+                    <!-- Area A: Child-friendly -->
+                    <div class="md:w-1/3 bg-orange-50 rounded-lg p-4 flex flex-col justify-center">
+                        <label class="flex items-center justify-between cursor-pointer group w-full">
+                            <span class="text-base font-bold text-gray-700 group-hover:text-black">キッズメニュー</span>
+                            <div class="relative inline-flex items-center">
+                                <input type="checkbox" id="filter-kids-menu" class="sr-only peer">
+                                <div
+                                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-orange/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-orange">
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Area B: Driver -->
+                    <div class="md:w-2/3 grid grid-cols-2 gap-4">
+                        <!-- Car Type -->
+                        <div class="flex flex-col">
+                            <label for="filter-car-type" class="mb-1 text-sm font-bold text-gray-600">車種</label>
+                            <select id="filter-car-type"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-orange focus:border-brand-orange block w-full p-2.5">
+                                <option value="all" selected>全て</option>
+                                <option value="Large/Minivan">大型/ミニバン</option>
+                                <option value="Normal">普通車</option>
+                                <option value="Light only">軽自動車</option>
+                            </select>
+                        </div>
+
+                        <!-- Parking Difficulty -->
+                        <div class="flex flex-col">
+                            <label for="filter-parking-difficulty"
+                                class="mb-1 text-sm font-bold text-gray-600">停めやすさ</label>
+                            <select id="filter-parking-difficulty"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-orange focus:border-brand-orange block w-full p-2.5">
+                                <option value="all" selected>全て</option>
+                                <option value="易">◎ 停めやすい</option>
+                                <option value="普">○ 普通</option>
+                                <option value="難">△ 難しい</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-10">
+        <p id="result-count" class="mb-4 text-gray-500 font-medium">検索結果: 読み込み中...</p>
+        <div id="store-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Cards will be injected here via JS -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-12">
+        <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-3 gap-8">
+            <div>
+                <h3 class="text-xl font-bold mb-4 text-brand-orange">Family Morning Cafe Gifu</h3>
+                <p class="text-gray-400 text-sm">
+                    岐阜県内の子連れモーニング情報を発信するポータルサイト。<br>
+                    家族みんなが笑顔になれる朝食時間をサポートします。
+                </p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">リンク</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white transition">掲載店舗の募集</a></li>
+                    <li><a href="#" class="hover:text-white transition">お問い合わせ</a></li>
+                    <li><a href="#" class="hover:text-white transition">プライバシーポリシー</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Sponsored by</h4>
+                <p class="text-sm text-gray-400">
+                    岐阜高専 E科 特別実験チーム
+                </p>
+            </div>
+        </div>
+        <div class="text-center text-xs text-gray-500 mt-12 border-t border-gray-700 pt-8">
+            &copy; 2024 Family Morning Cafe Gifu. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

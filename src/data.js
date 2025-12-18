@@ -1,0 +1,87 @@
+// Shared Data (Global Variable)
+const stores = [
+    {
+        "id": 1,
+        "name": "Cafe Terrace Gifu",
+        "parking_count": 25,
+        "parking_size_type": "Large/Minivan",
+        "has_kids_menu": true,
+        "has_high_chair": true,
+        "nearby_parking": false,
+        "has_wifi": true,
+        "location": { "lat": 35.423, "lng": 136.762 },
+        "image": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=1000",
+        "description": "広々とした駐車場でアルファードでも安心。キッズスペースも完備。",
+        "rating": 4.5
+    },
+    {
+        "id": 2,
+        "name": "Morning Club Hashima",
+        "parking_count": 8,
+        "parking_size_type": "Normal",
+        "has_kids_menu": true,
+        "has_high_chair": false,
+        "nearby_parking": true,
+        "has_wifi": false,
+        "location": { "lat": 35.331, "lng": 136.694 },
+        "image": "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1000",
+        "description": "昔ながらの落ち着いた雰囲気。近くにコインパーキングあり。",
+        "rating": 3.8
+    },
+    {
+        "id": 3,
+        "name": "Bakery Cafe Wheat",
+        "parking_count": 4,
+        "parking_size_type": "Light only",
+        "has_kids_menu": false,
+        "has_high_chair": false,
+        "nearby_parking": false,
+        "has_wifi": true,
+        "location": { "lat": 35.405, "lng": 136.740 },
+        "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=1000",
+        "description": "隠れ家的なパン屋さん。駐車場は狭めなので軽自動車推奨。",
+        "rating": 4.2
+    },
+    {
+        "id": 4,
+        "name": "Family Diner Ogaki",
+        "parking_count": 40,
+        "parking_size_type": "Large/Minivan",
+        "has_kids_menu": true,
+        "has_high_chair": true,
+        "nearby_parking": false,
+        "has_wifi": true,
+        "location": { "lat": 35.368, "lng": 136.619 },
+        "image": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1000",
+        "description": "大型チェーン店のような安心感。家族連れに大人気。",
+        "rating": 4.7
+    },
+    {
+        "id": 5,
+        "name": "Coffee House Green",
+        "parking_count": 12,
+        "parking_size_type": "Normal",
+        "has_kids_menu": true,
+        "has_high_chair": true,
+        "nearby_parking": true,
+        "has_wifi": false,
+        "location": { "lat": 35.442, "lng": 136.788 },
+        "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1000",
+        "description": "自然光が入る明るい店内。ベビーカー入店OKの広さ。",
+        "rating": 4.0
+    },
+    {
+        "id": 6,
+        "name": "Grandma's Kitchen",
+        "parking_count": 15,
+        "parking_size_type": "Large/Minivan",
+        "has_kids_menu": true,
+        "has_high_chair": true,
+        "nearby_parking": false,
+        "has_wifi": true,
+        "location": { "lat": 35.430, "lng": 136.750 },
+        "image": "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&q=80&w=1000",
+        "description": "孫と行きたいお店No.1。段差なしのバリアフリー設計。",
+        "rating": 4.9
+    }
+];
