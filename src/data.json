@@ -20,7 +20,25 @@
     "has_kids_menu": true,
     "kids_menu": "おこさまパンケーキプレート、キッズうどん",
     "has_high_chair": true,
-    "has_wifi": true
+    "has_wifi": true,
+    "menu_images": [
+      "https://images.unsplash.com/photo-1556742526-795a8eac79d3?auto=format&fit=crop&q=80&w=1000",
+      "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=1000"
+    ],
+    "gallery": {
+      "exterior": [
+        "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=1000",
+        "https://images.unsplash.com/photo-1559329007-40df8a9345d8?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "interior": [
+        "https://images.unsplash.com/photo-1554118811-39e557998859?auto=format&fit=crop&q=80&w=1000",
+        "https://images.unsplash.com/photo-1560624052-449f5ddf0c31?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "food": [
+        "https://images.unsplash.com/photo-1493770348161-369560ae357d?auto=format&fit=crop&q=80&w=1000",
+        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1000"
+      ]
+    }
   },
   {
     "id": 2,
@@ -43,7 +61,21 @@
     "has_kids_menu": true,
     "kids_menu": "ミニサンドイッチセット",
     "has_high_chair": false,
-    "has_wifi": false
+    "has_wifi": false,
+    "menu_images": [
+      "https://images.unsplash.com/photo-1549488344-c7388d2a6a58?auto=format&fit=crop&q=80&w=1000"
+    ],
+    "gallery": {
+      "exterior": [
+        "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "interior": [
+        "https://images.unsplash.com/photo-1559338676-43d937077ccb?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "food": [
+        "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&q=80&w=1000"
+      ]
+    }
   },
   {
     "id": 3,
@@ -66,7 +98,21 @@
     "has_kids_menu": false,
     "kids_menu": null,
     "has_high_chair": false,
-    "has_wifi": true
+    "has_wifi": true,
+    "menu_images": [
+      "https://images.unsplash.com/photo-1627258327916-ad97d643df5e?auto=format&fit=crop&q=80&w=1000"
+    ],
+    "gallery": {
+      "exterior": [
+        "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "interior": [
+        "https://images.unsplash.com/photo-1552554286-63e5e40632d4?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "food": [
+        "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=1000"
+      ]
+    }
   },
   {
     "id": 4,
@@ -89,7 +135,21 @@
     "has_kids_menu": true,
     "kids_menu": "おこさまカレー、おこさまランチ",
     "has_high_chair": true,
-    "has_wifi": true
+    "has_wifi": true,
+    "menu_images": [
+       "https://images.unsplash.com/photo-1577977611846-5be8d0224d08?auto=format&fit=crop&q=80&w=1000"
+    ],
+    "gallery": {
+      "exterior": [
+        "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "interior": [
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "food": [
+        "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1000"
+      ]
+    }
   },
   {
     "id": 5,
@@ -112,7 +172,21 @@
     "has_kids_menu": true,
     "kids_menu": "キッズドリンク、ミニトースト",
     "has_high_chair": true,
-    "has_wifi": false
+    "has_wifi": false,
+    "menu_images": [
+       "https://images.unsplash.com/photo-1574154988452-f63c8c7dd2e4?auto=format&fit=crop&q=80&w=1000"
+    ],
+    "gallery": {
+      "exterior": [
+        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "interior": [
+        "https://images.unsplash.com/photo-1453614512568-c4024d13c247?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "food": [
+        "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&q=80&w=1000"
+      ]
+    }
   },
   {
     "id": 6,
@@ -135,6 +209,20 @@
     "has_kids_menu": true,
     "kids_menu": "手作りおにぎりセット",
     "has_high_chair": true,
-    "has_wifi": true
+    "has_wifi": true,
+    "menu_images": [
+       "https://images.unsplash.com/photo-1627258327916-ad97d643df5e?auto=format&fit=crop&q=80&w=1000"
+    ],
+    "gallery": {
+      "exterior": [
+        "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "interior": [
+        "https://images.unsplash.com/photo-1565538810643-b5bdb639b96c?auto=format&fit=crop&q=80&w=1000"
+      ],
+      "food": [
+        "https://images.unsplash.com/photo-1466637574441-749b8f19452f?auto=format&fit=crop&q=80&w=1000"
+      ]
+    }
   }
 ]

@@ -31,6 +31,22 @@
         body {
             font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
         }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -221,6 +237,67 @@
                     </div>
                 `;
 
+                // 1. Top Tab Content (Aggregating existing sections)
+                const topTabContent = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
+                        <div class="md:col-span-2">
+                            ${basicInfoHtml}
+                        </div>
+                        <div>
+                            ${parkingInfoHtml}
+                            ${kidsInfoHtml}
+                        </div>
+                        <div>
+                            ${mapHtml}
+                        </div>
+                    </div>
+                `;
+
+                // 2. Menu Tab Content
+                const menuImages = store.menu_images || [];
+                let menuTabContent = '';
+                if (menuImages.length > 0) {
+                    menuTabContent = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
+                            ${menuImages.map(url => `
+                                <div class="rounded-xl overflow-hidden shadow-sm border border-gray-100 group">
+                                    <img src="${url}" alt="メニュー" class="w-full h-auto object-cover group-hover:scale-105 transition duration-300 cursor-pointer" onclick="window.open(this.src, '_blank')">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <p class="text-center text-gray-400 text-sm mt-4">※画像はイメージです。実際のメニューとは異なる場合があります。</p>
+                    `;
+                } else {
+                    menuTabContent = `<div class="text-center py-12 text-gray-500">メニュー情報はありません</div>`;
+                }
+
+                // 3. Photos Tab Content
+                const gallery = store.gallery || {};
+                const createGallerySection = (title, images) => {
+                    if (!images || images.length === 0) return '';
+                    return `
+                        <div class="mb-8 last:mb-0">
+                            <h3 class="text-lg font-bold text-gray-700 mb-3 border-l-4 border-brand-orange pl-3">${title}</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                ${images.map(url => `
+                                    <div class="aspect-square rounded-lg overflow-hidden shadow-sm hover:shadow-md transition bg-gray-100 group">
+                                        <img src="${url}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 cursor-pointer" onclick="window.open(this.src, '_blank')">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                };
+
+                const photoTabContent = `
+                    <div class="animate-fade-in bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                        ${createGallerySection('料理', gallery.food)}
+                        ${createGallerySection('内観', gallery.interior)}
+                        ${createGallerySection('外観', gallery.exterior)}
+                    </div>
+                `;
+
+
                 // Assemble Main Layout
                 mainContent.innerHTML = `
                     <!-- Hero Image -->
@@ -234,26 +311,76 @@
                     <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">${store.name}</h1>
                     <p class="text-lg text-gray-600 mb-8">${store.description}</p>
 
-                    <!-- Info Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="md:col-span-2">
-                            ${basicInfoHtml}
+                     <!-- Tab Navigation -->
+                    <div class="flex border-b-2 border-gray-100 mb-8 sticky top-[64px] bg-gray-50 z-30 pt-2 transition-all duration-300" id="sticky-tabs">
+                        <button class="tab-btn px-4 sm:px-6 py-3 font-bold text-gray-500 border-b-2 border-transparent hover:text-brand-orange transition active-tab flex-1 sm:flex-none text-center" data-target="top">
+                            店舗トップ
+                        </button>
+                        <button class="tab-btn px-4 sm:px-6 py-3 font-bold text-gray-500 border-b-2 border-transparent hover:text-brand-orange transition flex-1 sm:flex-none text-center" data-target="menu">
+                            メニュー
+                        </button>
+                        <button class="tab-btn px-4 sm:px-6 py-3 font-bold text-gray-500 border-b-2 border-transparent hover:text-brand-orange transition flex-1 sm:flex-none text-center" data-target="photos">
+                            写真
+                        </button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                     <div style="min-height: 400px;"> <!-- Helper for sticky tabs -->
+                        <div id="tab-top" class="tab-content block">
+                            ${topTabContent}
                         </div>
-                        <div>
-                            ${parkingInfoHtml}
-                            ${kidsInfoHtml}
+                        <div id="tab-menu" class="tab-content hidden">
+                            ${menuTabContent}
                         </div>
-                        <div>
-                            ${mapHtml}
+                        <div id="tab-photos" class="tab-content hidden">
+                            ${photoTabContent}
                         </div>
                     </div>
 
-                    <div class="mt-8 text-center">
-                        <a href="index.html" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-bold rounded-full shadow-sm text-white bg-brand-orange hover:bg-orange-500 transition transform hover:-translate-y-0.5">
+                    <!-- Back Button Footer -->
+                    <div class="mt-8 text-center pt-8 border-t border-gray-200">
+                        <a href="index.html" class="inline-flex items-center justify-center px-8 py-4 border border-brand-orange text-brand-orange font-bold rounded-full hover:bg-orange-50 transition transform hover:-translate-y-0.5">
                             一覧に戻る
                         </a>
                     </div>
                 `;
+
+                // --- TAB LOGIC ---
+                const tabBtns = document.querySelectorAll('.tab-btn');
+                const tabContents = document.querySelectorAll('.tab-content');
+
+                tabBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const target = btn.dataset.target;
+
+                        // Update Buttons
+                        tabBtns.forEach(b => {
+                            b.classList.remove('text-brand-orange', 'border-brand-orange');
+                            b.classList.add('text-gray-500', 'border-transparent');
+                        });
+                        btn.classList.remove('text-gray-500', 'border-transparent');
+                        btn.classList.add('text-brand-orange', 'border-brand-orange');
+
+                        // Update Contents
+                        tabContents.forEach(c => {
+                            c.classList.add('hidden');
+                        });
+                        const targetEl = document.getElementById('tab-' + target);
+                        targetEl.classList.remove('hidden');
+
+                        // Add fade animation
+                        targetEl.classList.remove('animate-fade-in');
+                        void targetEl.offsetWidth; // trigger reflow
+                        targetEl.classList.add('animate-fade-in');
+                    });
+                });
+
+                // Set initial active state correctly
+                const activeBtn = document.querySelector('.active-tab');
+                if (activeBtn) {
+                    activeBtn.classList.remove('text-gray-500', 'border-transparent');
+                    activeBtn.classList.add('text-brand-orange', 'border-brand-orange');
+                }
             }
         });
     </script>
