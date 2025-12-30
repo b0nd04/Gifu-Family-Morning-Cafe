@@ -273,11 +273,10 @@
 
                 // 3. Photos Tab Content
                 const gallery = store.gallery || {};
-                const createGallerySection = (title, images) => {
+                const createGallerySection = (images) => {
                     if (!images || images.length === 0) return '';
                     return `
-                        <div class="mb-8 last:mb-0">
-                            <h3 class="text-lg font-bold text-gray-700 mb-3 border-l-4 border-brand-orange pl-3">${title}</h3>
+                        <div class="mb-4 last:mb-0">
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                                 ${images.map(url => `
                                     <div class="aspect-square rounded-lg overflow-hidden shadow-sm hover:shadow-md transition bg-gray-100 group">
@@ -291,11 +290,32 @@
 
                 const photoTabContent = `
                     <div class="animate-fade-in bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                        ${createGallerySection('料理', gallery.food)}
-                        ${createGallerySection('内観', gallery.interior)}
-                        ${createGallerySection('外観', gallery.exterior)}
+                        <!-- Sub Tab Navigation -->
+                        <div class="flex border-b border-gray-200 mb-6">
+                            <button class="sub-tab-btn px-4 py-2 font-bold text-sm text-brand-orange border-b-2 border-brand-orange transition hover:text-brand-orange/80 mr-4" data-target="food">
+                                料理
+                            </button>
+                            <button class="sub-tab-btn px-4 py-2 font-bold text-sm text-gray-500 border-b-2 border-transparent transition hover:text-brand-orange mr-4" data-target="interior">
+                                内観
+                            </button>
+                            <button class="sub-tab-btn px-4 py-2 font-bold text-sm text-gray-500 border-b-2 border-transparent transition hover:text-brand-orange" data-target="exterior">
+                                外観
+                            </button>
+                        </div>
+
+                        <!-- Sub Tab Contents -->
+                        <div id="sub-tab-food" class="sub-tab-content block animate-fade-in">
+                            ${createGallerySection(gallery.food) || '<div class="text-gray-400 text-sm">写真がありません</div>'}
+                        </div>
+                        <div id="sub-tab-interior" class="sub-tab-content hidden">
+                            ${createGallerySection(gallery.interior) || '<div class="text-gray-400 text-sm">写真がありません</div>'}
+                        </div>
+                        <div id="sub-tab-exterior" class="sub-tab-content hidden">
+                            ${createGallerySection(gallery.exterior) || '<div class="text-gray-400 text-sm">写真がありません</div>'}
+                        </div>
                     </div>
                 `;
+
 
 
                 // Assemble Main Layout
@@ -381,6 +401,36 @@
                     activeBtn.classList.remove('text-gray-500', 'border-transparent');
                     activeBtn.classList.add('text-brand-orange', 'border-brand-orange');
                 }
+
+                // --- SUB TAB LOGIC ---
+                const subTabBtns = document.querySelectorAll('.sub-tab-btn');
+                const subTabContents = document.querySelectorAll('.sub-tab-content');
+
+                subTabBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const target = btn.dataset.target;
+
+                        // Update Buttons
+                        subTabBtns.forEach(b => {
+                            b.classList.remove('text-brand-orange', 'border-brand-orange');
+                            b.classList.add('text-gray-500', 'border-transparent');
+                        });
+                        btn.classList.remove('text-gray-500', 'border-transparent');
+                        btn.classList.add('text-brand-orange', 'border-brand-orange');
+
+                        // Update Contents
+                        subTabContents.forEach(c => {
+                            c.classList.add('hidden');
+                        });
+                        const targetEl = document.getElementById('sub-tab-' + target);
+                        targetEl.classList.remove('hidden');
+
+                        // Add fade animation
+                        targetEl.classList.remove('animate-fade-in');
+                        void targetEl.offsetWidth; // trigger reflow
+                        targetEl.classList.add('animate-fade-in');
+                    });
+                });
             }
         });
     </script>
