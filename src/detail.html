@@ -169,7 +169,26 @@
                     </div>
                 `;
 
-                let kidsMenuContent = store.kids_menu ? store.kids_menu : 'なし';
+                // Conditional Kids Menu Layout
+                let kidsMenuEntry;
+                if (store.kids_menu) {
+                    // Has Kids Menu: Vertical Block Layout
+                    kidsMenuEntry = `
+                        <div class="flex flex-col border-b border-gray-100 pb-2 last:border-0">
+                            <dt class="font-bold text-gray-700 mb-1">キッズメニュー</dt>
+                            <dd class="text-gray-600 text-sm whitespace-pre-wrap">${store.kids_menu}</dd>
+                        </div>
+                    `;
+                } else {
+                    // No Kids Menu: Horizontal Layout
+                    kidsMenuEntry = `
+                        <div class="flex items-center justify-between border-b border-gray-100 pb-2 last:border-0">
+                            <dt class="font-bold text-gray-700">キッズメニュー</dt>
+                            <dd class="text-right max-w-xs text-gray-400">なし</dd>
+                        </div>
+                    `;
+                }
+
                 const kidsInfoHtml = `
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 flex items-center">
@@ -180,10 +199,9 @@
                                 <dt class="font-bold text-gray-700">キッズスペース</dt>
                                 <dd>${store.has_kids_space ? '<span class="text-green-600 font-bold">あり</span>' : '<span class="text-gray-400">なし</span>'}</dd>
                             </div>
-                             <div class="flex flex-col border-b border-gray-100 pb-2 last:border-0">
-                                <dt class="font-bold text-gray-700 mb-1">キッズメニュー</dt>
-                                <dd class="text-gray-600 text-sm whitespace-pre-wrap">${kidsMenuContent}</dd>
-                            </div>
+                            
+                            ${kidsMenuEntry}
+
                             <div class="flex items-center justify-between pt-2">
                                 <dt class="font-bold text-gray-700">Wi-Fi</dt>
                                 <dd>${store.has_wifi ? '<span class="text-brand-orange font-bold">あり 📶</span>' : 'なし'}</dd>
