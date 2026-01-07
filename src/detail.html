@@ -103,7 +103,7 @@
                     return rawType;
                 };
 
-                // Section 1: Basic Info
+                // --- 1. Basic Info Section (Existing Content) ---
                 const basicInfoHtml = `
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 flex items-center">
@@ -138,7 +138,6 @@
                     </div>
                 `;
 
-                // Section 2: Parking Info
                 const parkingDiff = Array.isArray(store.parking_difficulty) ? store.parking_difficulty[0] : store.parking_difficulty;
                 const parkingInfoHtml = `
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
@@ -170,7 +169,6 @@
                     </div>
                 `;
 
-                // Section 3: Kids & Wifi Info
                 let kidsMenuContent = store.kids_menu ? store.kids_menu : 'なし';
                 const kidsInfoHtml = `
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
@@ -182,11 +180,10 @@
                                 <dt class="font-bold text-gray-700">キッズスペース</dt>
                                 <dd>${store.has_kids_space ? '<span class="text-green-600 font-bold">あり</span>' : '<span class="text-gray-400">なし</span>'}</dd>
                             </div>
-                             <div class="flex items-center justify-between border-b border-gray-100 pb-2 last:border-0">
-                                <dt class="font-bold text-gray-700">キッズメニュー</dt>
-                                <dd class="text-right max-w-xs">${kidsMenuContent}</dd>
+                             <div class="flex flex-col border-b border-gray-100 pb-2 last:border-0">
+                                <dt class="font-bold text-gray-700 mb-1">キッズメニュー</dt>
+                                <dd class="text-gray-600 text-sm whitespace-pre-wrap">${kidsMenuContent}</dd>
                             </div>
-
                             <div class="flex items-center justify-between pt-2">
                                 <dt class="font-bold text-gray-700">Wi-Fi</dt>
                                 <dd>${store.has_wifi ? '<span class="text-brand-orange font-bold">あり 📶</span>' : 'なし'}</dd>
@@ -195,7 +192,6 @@
                     </div>
                 `;
 
-                // Section 4: Map
                 const mapHtml = `
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
                          <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 flex items-center">
@@ -215,6 +211,48 @@
                     </div>
                 `;
 
+                // --- 2. Photos Section (New Content) ---
+                // Helper to render image grid
+                const renderImageGrid = (images, emptyMsg) => {
+                    if (!images || images.length === 0) {
+                        return `<div class="p-8 text-center text-gray-400 bg-gray-50 rounded-xl">${emptyMsg}</div>`;
+                    }
+                    return `
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            ${images.map(img => `
+                                <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group">
+                                    <img src="${img.url}" class="w-full h-full object-cover transition duration-300 group-hover:scale-110">
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                };
+
+                const photosHtml = `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                        <!-- Sub Tabs -->
+                        <div class="flex space-x-2 mb-6 overflow-x-auto pb-2 border-b">
+                            <button onclick="switchPhotoTab('menu')" id="btn-photo-menu" class="px-4 py-2 rounded-full font-bold text-sm bg-brand-orange text-white whitespace-nowrap transition">メニュー</button>
+                            <button onclick="switchPhotoTab('exterior')" id="btn-photo-exterior" class="px-4 py-2 rounded-full font-bold text-sm bg-gray-100 text-gray-500 hover:bg-gray-200 whitespace-nowrap transition">外観</button>
+                            <button onclick="switchPhotoTab('interior')" id="btn-photo-interior" class="px-4 py-2 rounded-full font-bold text-sm bg-gray-100 text-gray-500 hover:bg-gray-200 whitespace-nowrap transition">内観</button>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div id="photo-content-area">
+                            <div id="photo-menu" class="animate-fade-in">
+                                ${renderImageGrid(store.menu_images, 'メニュー写真はありません')}
+                            </div>
+                            <div id="photo-exterior" class="hidden animate-fade-in">
+                                ${renderImageGrid(store.gallery_exterior, '外観写真はありません')}
+                            </div>
+                            <div id="photo-interior" class="hidden animate-fade-in">
+                                ${renderImageGrid(store.gallery_interior, '内観写真はありません')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+
                 // Assemble Main Layout
                 mainContent.innerHTML = `
                     <!-- Hero Image -->
@@ -228,18 +266,35 @@
                     <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">${store.name}</h1>
                     <p class="text-lg text-gray-600 mb-8">${store.description}</p>
 
-                    <!-- Info Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="md:col-span-2">
-                            ${basicInfoHtml}
+                    <!-- Main Tabs -->
+                    <div class="flex border-b border-gray-200 mb-6">
+                        <button onclick="switchMainTab('info')" id="btn-main-info" class="flex-1 py-3 text-center font-bold text-brand-orange border-b-2 border-brand-orange hover:bg-orange-50 transition">
+                            基本情報
+                        </button>
+                        <button onclick="switchMainTab('photos')" id="btn-main-photos" class="flex-1 py-3 text-center font-bold text-gray-500 hover:text-brand-orange hover:bg-orange-50 transition">
+                            写真ギャラリー
+                        </button>
+                    </div>
+
+                    <!-- Info Content -->
+                    <div id="panel-info">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                ${basicInfoHtml}
+                            </div>
+                            <div>
+                                ${parkingInfoHtml}
+                                ${kidsInfoHtml}
+                            </div>
+                            <div>
+                                ${mapHtml}
+                            </div>
                         </div>
-                        <div>
-                            ${parkingInfoHtml}
-                            ${kidsInfoHtml}
-                        </div>
-                        <div>
-                            ${mapHtml}
-                        </div>
+                    </div>
+
+                    <!-- Photos Content -->
+                    <div id="panel-photos" class="hidden">
+                        ${photosHtml}
                     </div>
 
                     <div class="mt-8 text-center">
@@ -248,6 +303,46 @@
                         </a>
                     </div>
                 `;
+
+                // Add Switch Functions to Global Scope or attach
+                window.switchMainTab = (tab) => {
+                    const infoBtn = document.getElementById('btn-main-info');
+                    const photoBtn = document.getElementById('btn-main-photos');
+                    const infoPanel = document.getElementById('panel-info');
+                    const photoPanel = document.getElementById('panel-photos');
+
+                    if (tab === 'info') {
+                        infoBtn.className = 'flex-1 py-3 text-center font-bold text-brand-orange border-b-2 border-brand-orange hover:bg-orange-50 transition';
+                        photoBtn.className = 'flex-1 py-3 text-center font-bold text-gray-500 hover:text-brand-orange hover:bg-orange-50 transition';
+                        infoPanel.classList.remove('hidden');
+                        photoPanel.classList.add('hidden');
+                    } else {
+                        infoBtn.className = 'flex-1 py-3 text-center font-bold text-gray-500 hover:text-brand-orange hover:bg-orange-50 transition';
+                        photoBtn.className = 'flex-1 py-3 text-center font-bold text-brand-orange border-b-2 border-brand-orange hover:bg-orange-50 transition';
+                        infoPanel.classList.add('hidden');
+                        photoPanel.classList.remove('hidden');
+                    }
+                };
+
+                window.switchPhotoTab = (subTab) => {
+                    // Buttons
+                    const btns = ['menu', 'exterior', 'interior'];
+                    btns.forEach(t => {
+                        const btn = document.getElementById(`btn-photo-${t}`);
+                        if (t === subTab) {
+                            btn.className = 'px-4 py-2 rounded-full font-bold text-sm bg-brand-orange text-white whitespace-nowrap transition';
+                        } else {
+                            btn.className = 'px-4 py-2 rounded-full font-bold text-sm bg-gray-100 text-gray-500 hover:bg-gray-200 whitespace-nowrap transition';
+                        }
+                    });
+
+                    // Content
+                    document.getElementById('photo-menu').classList.add('hidden');
+                    document.getElementById('photo-exterior').classList.add('hidden');
+                    document.getElementById('photo-interior').classList.add('hidden');
+
+                    document.getElementById(`photo-${subTab}`).classList.remove('hidden');
+                };
             }
         });
     </script>

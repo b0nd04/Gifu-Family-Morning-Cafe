@@ -12,7 +12,7 @@ const ENDPOINT = `https://${SERVICE_DOMAIN}.microcms.io/api/v1/stores`;
  */
 async function fetchStores() {
     try {
-        const response = await fetch(ENDPOINT, {
+        const response = await fetch(`${ENDPOINT}?limit=50`, {
             headers: {
                 'X-MICROCMS-API-KEY': API_KEY,
             },
