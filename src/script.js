@@ -10,8 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterCarType = document.getElementById('filter-car-type');
 
     // Fetch Data
-    fetch('data.json')
-        .then(response => response.json())
+    fetchStores()
         .then(data => {
             stores = data;
             renderStores(stores);
@@ -39,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // NEW: Parking Difficulty Filter (Cumulative)
             if (criteria.parkingDiff !== 'all') {
-                const diff = store.parking_difficulty;
+                const rawDiff = store.parking_difficulty;
+                const diff = Array.isArray(rawDiff) ? rawDiff[0] : rawDiff;
                 const target = criteria.parkingDiff;
 
                 if (target === '易') {
@@ -54,7 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (criteria.carType !== 'all') {
                 const userCar = criteria.carType;
-                const storeType = store.parking_size_type;
+                const rawStoreType = store.parking_size_type;
+                const storeType = Array.isArray(rawStoreType) ? rawStoreType[0] : rawStoreType;
 
                 if (userCar === 'Large/Minivan') {
                     return storeType === 'Large/Minivan';
@@ -96,20 +97,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // 2. Parking Difficulty (Replacing High Chair)
-            if (store.parking_difficulty === '易') {
+            const diff = Array.isArray(store.parking_difficulty) ? store.parking_difficulty[0] : store.parking_difficulty;
+            if (diff === '易') {
                 badges += `<span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-1 mb-1">🚙 停めやすい</span>`;
             }
 
             // 3. Parking Size Tags (Replacing Minivan/Light logic slightly visually)
-            if (store.parking_size_type === 'Large/Minivan') {
+            const parkingSize = Array.isArray(store.parking_size_type) ? store.parking_size_type[0] : store.parking_size_type;
+            if (parkingSize === 'Large/Minivan') {
                 badges += `<span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full mr-1 mb-1">大型可</span>`;
-            } else if (store.parking_size_type === 'Light only') {
+            } else if (parkingSize === 'Light only') {
                 badges += `<span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full mr-1 mb-1">軽のみ</span>`;
             }
 
             // Parking Info coloration
             let parkingColor = 'text-gray-600';
-            if (store.parking_difficulty === '易') parkingColor = 'text-green-600 font-bold'; // Highlight easy parking
+            if (diff === '易') parkingColor = 'text-green-600 font-bold'; // Highlight easy parking
 
             const card = document.createElement('div');
             card.className = 'bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 flex flex-col h-full cursor-pointer';
@@ -121,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             card.innerHTML = `
                 <div class="relative h-48 bg-gray-200">
-                    <img src="${store.image}" alt="${store.name}" class="w-full h-full object-cover">
+                    <img src="${store.image.url}" alt="${store.name}" class="w-full h-full object-cover">
                     <div class="absolute top-3 right-3 bg-white/90 backdrop-blur text-xs font-bold px-2 py-1 rounded-md shadow-sm">
                         ★ ${store.rating}
                     </div>
@@ -137,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="mt-auto pt-4 border-t border-gray-100 grid grid-cols-2 gap-4 text-sm">
                         <div>
                             <p class="text-gray-400 text-xs mb-0.5">駐車場</p>
-                            <p class="${parkingColor}">${store.parking_count}台 (${translateParking(store.parking_size_type)})</p>
+                            <p class="${parkingColor}">${store.parking_count}台 (${translateParking(parkingSize)})</p>
                         </div>
                         <div>
                             <p class="text-gray-400 text-xs mb-0.5">Wi-Fi</p>
