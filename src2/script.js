@@ -144,16 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${store.description}
                     </p>
                     
-                    <div class="mt-auto pt-4 border-t border-gray-200 flex justify-between items-end text-xs uppercase tracking-widest font-bold text-gray-400">
-                        <div>
-                            <span class="block text-brand-black mb-1">台数</span>
-                            ${store.parking_count}台
-                        </div>
-                         <div class="text-right">
-                             <span class="block text-brand-black mb-1">サイズ</span>
-                             ${translateParking(parkingSize)}
-                        </div>
-                    </div>
+
                 </div>
             `;
             storeListEl.appendChild(card);
