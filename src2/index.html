@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gifu Family Morning Cafe</title>
+    <!-- Google Fonts: Shippori Mincho for Japanese Serif, Playfair Display for English Serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Shippori+Mincho:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#1a1a1a',
+                            gold: '#c5a059',
+                            gray: '#f4f4f4'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', '"Shippori Mincho"', 'serif'],
+                        sans: ['"Helvetica Neue"', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .font-serif {
+            font-family: 'Playfair Display', 'Shippori Mincho', serif;
+        }
+
+        .editorial-border {
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+        }
+    </style>
+</head>
+
+<body class="tracking-wide">
+
+    <!-- Masthead -->
+    <header class="py-8 mb-12">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="border-b border-black pb-8 mb-2">
+                <p class="text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-4">The Complete Guide for</p>
+                <h1 class="text-5xl md:text-7xl font-serif font-bold tracking-tight text-brand-black mb-2">
+                    Gifu Family Morning
+                </h1>
+                <p class="font-serif italic text-xl text-gray-600">Discover the finest start to your day.</p>
+            </div>
+            <div class="border-b border-black w-24 mx-auto"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-4">
+
+        <!-- Search/Filter Section (Minimalist) -->
+        <div class="mb-16">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-gray-200 pb-8">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-brand-black mb-2">Curated Selection</h2>
+                    <p class="text-sm text-gray-500 font-sans">検索条件を指定して絞り込む</p>
+                </div>
+                <div class="flex-1 w-full md:w-auto">
+                    <!-- Filters Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                        <!-- Filter: Kids Menu -->
+                        <div class="flex items-center">
+                            <input type="checkbox" id="filter-kids-menu"
+                                class="w-4 h-4 text-brand-black border-gray-300 focus:ring-brand-gold rounded-none cursor-pointer">
+                            <label for="filter-kids-menu"
+                                class="ml-3 text-sm font-bold tracking-wider uppercase cursor-pointer">
+                                Kids Menu Available
+                            </label>
+                        </div>
+
+                        <!-- Filter: Parking Difficulty -->
+                        <div class="border-b border-gray-300">
+                            <select id="filter-parking-difficulty"
+                                class="w-full bg-transparent border-none py-2 px-0 text-brand-black font-sans focus:ring-0 cursor-pointer">
+                                <option value="all">Parking: All</option>
+                                <option value="易">Easy Parking</option>
+                                <option value="普">Normal Parking</option>
+                            </select>
+                        </div>
+
+                        <!-- Filter: Car Type -->
+                        <div class="border-b border-gray-300">
+                            <select id="filter-car-type"
+                                class="w-full bg-transparent border-none py-2 px-0 text-brand-black font-sans focus:ring-0 cursor-pointer">
+                                <option value="all">Car Size: All</option>
+                                <option value="Large/Minivan">Large / Minivan</option>
+                                <option value="Normal">Normal Car</option>
+                                <option value="Light only">Light Car Only</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-right min-w-[100px]">
+                    <span id="result-count" class="text-4xl font-serif font-bold text-brand-black">0</span>
+                    <span class="block text-xs uppercase tracking-widest text-gray-400">Results</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store Grid -->
+        <div id="store-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
+            <!-- Stores will be injected here -->
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-24 py-12 border-t border-black text-center">
+        <p class="font-serif text-2xl italic mb-4">Gifu Family Morning</p>
+        <p class="text-xs font-bold tracking-widest uppercase text-gray-400">
+            &copy; 2024 All Rights Reserved.
+        </p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

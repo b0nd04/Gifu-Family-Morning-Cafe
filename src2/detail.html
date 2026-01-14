@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店舗詳細 - Family Morning Cafe Gifu</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Shippori+Mincho:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#1a1a1a',
+                            gold: '#c5a059',
+                            gray: '#f4f4f4'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', '"Shippori Mincho"', 'serif'],
+                        sans: ['"Helvetica Neue"', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .font-serif {
+            font-family: 'Playfair Display', 'Shippori Mincho', serif;
+        }
+
+        /* Custom scrollbar for tab container */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-brand-black selection:text-white">
+
+    <!-- Header (Simple) -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-black">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center text-brand-black hover:text-gray-600 transition group">
+                <span class="mr-2 group-hover:-translate-x-1 transition text-lg">←</span>
+                <span class="font-serif italic font-bold text-lg">Back to Collection</span>
+            </a>
+            <h1 class="text-sm font-bold tracking-[0.2em] uppercase">Gifu Family Morning</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-6 py-12" id="main-content">
+        <div id="loading" class="text-center py-20">
+            <p class="font-serif italic text-2xl text-gray-400">Loading Story...</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-24 py-12 border-t border-black text-center">
+        <p class="font-serif text-2xl italic mb-4">Gifu Family Morning</p>
+        <p class="text-xs font-bold tracking-widest uppercase text-gray-400">
+            &copy; 2024 All Rights Reserved.
+        </p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainContent = document.getElementById('main-content');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const storeId = urlParams.get('id');
+
+            fetchStore(storeId)
+                .then(store => {
+                    renderDetail(store);
+                })
+                .catch(err => {
+                    console.error(err);
+                    showError();
+                });
+
+            function showError() {
+                mainContent.innerHTML = `
+                    <div class="text-center py-20 border border-black p-12">
+                        <h2 class="text-3xl font-serif font-bold mb-4">Store Not Found</h2>
+                        <a href="index.html" class="underline decoration-1 underline-offset-4 hover:no-underline">Return to Home</a>
+                    </div>
+                `;
+            }
+
+            function renderDetail(store) {
+                // Helper for Parking Size
+                const translateSize = (type) => {
+                    const rawType = Array.isArray(type) ? type[0] : type;
+                    if (rawType === 'Large/Minivan') return 'Large Car';
+                    if (rawType === 'Normal') return 'Normal Car';
+                    if (rawType === 'Light only') return 'Light Car Only';
+                    return rawType;
+                };
+
+                // --- 1. Info Section (Table Layout) ---
+                const infoRow = (label, value) => `
+                    <div class="flex flex-col sm:flex-row border-b border-gray-200 py-4 last:border-0">
+                        <dt class="sm:w-40 font-bold text-xs uppercase tracking-widest text-gray-500 pt-1">${label}</dt>
+                        <dd class="flex-1 font-serif text-lg">${value}</dd>
+                    </div>
+                `;
+
+                const basicInfoHtml = `
+                    <div class="mb-12">
+                        <h2 class="text-3xl font-serif font-bold mb-6 italic">Essential Information</h2>
+                        <dl class="border-t border-black">
+                            ${infoRow('Name', store.name)}
+                            ${infoRow('Address', store.adress || store.address)}
+                            ${infoRow('Tel', store.tel)}
+                            ${infoRow('Hours', store.business_hours)}
+                            ${infoRow('Morning', `<span class="text-brand-gold font-bold">${store.morning_hours}</span>`)}
+                            ${infoRow('Closed', store.regular_holiday)}
+                        </dl>
+                    </div>
+                `;
+
+                // --- Parking Info ---
+                const parkingDiff = Array.isArray(store.parking_difficulty) ? store.parking_difficulty[0] : store.parking_difficulty;
+                const parkingInfoHtml = `
+                    <div class="mb-12 bg-gray-50 p-8 border border-gray-200">
+                        <h2 class="text-2xl font-serif font-bold mb-6">Parking Details</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                            <div>
+                                <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">Capacity</p>
+                                <p class="font-serif text-2xl">${store.parking_count} Cars</p>
+                            </div>
+                            <div>
+                                <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">Space Size</p>
+                                <p class="font-serif text-2xl">${translateSize(store.parking_size_type)}</p>
+                            </div>
+                             <div>
+                                <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">Difficulty</p>
+                                <p class="font-serif text-xl">
+                                    ${parkingDiff === '易' ? 'Easy to Park' : parkingDiff === '普' ? 'Normal' : 'Difficult'}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // --- Kids Info ---
+                // Conditional Kids Menu
+                let kidsMenuEntry;
+                if (store.kids_menu) {
+                    kidsMenuEntry = `
+                        <div class="mt-6 border-l-4 border-brand-gold pl-6 py-2 bg-yellow-50/50">
+                            <p class="font-serif font-bold text-lg mb-2">Kids Menu</p>
+                            <p class="text-gray-700 italic whitespace-pre-wrap">${store.kids_menu}</p>
+                        </div>
+                    `;
+                } else {
+                    kidsMenuEntry = `
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+                            <span class="font-serif">Kids Menu</span>
+                            <span class="text-xs uppercase tracking-widest text-gray-400">Not Available</span>
+                        </div>
+                    `;
+                }
+
+                const kidsInfoHtml = `
+                    <div class="mb-12">
+                        <h2 class="text-3xl font-serif font-bold mb-6 italic">Family Amenities</h2>
+                        <div class="border-t border-black pt-6">
+                            
+                            <div class="flex justify-between items-center py-3 border-b border-gray-200">
+                                <span class="font-serif text-lg">Kids Space</span>
+                                <span class="text-xs uppercase tracking-widest ${store.has_kids_space ? 'text-brand-black font-bold' : 'text-gray-400'}">
+                                    ${store.has_kids_space ? 'Available' : 'Unavailable'}
+                                </span>
+                            </div>
+
+                            ${kidsMenuEntry}
+
+                            <div class="flex justify-between items-center py-3 mt-4 border-t border-gray-200">
+                                <span class="font-serif text-lg">Wi-Fi Access</span>
+                                <span class="text-xs uppercase tracking-widest ${store.has_wifi ? 'text-brand-black font-bold' : 'text-gray-400'}">
+                                    ${store.has_wifi ? 'Available' : 'Unavailable'}
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+
+                // --- Map ---
+                const mapHtml = `
+                    <div class="mb-12">
+                        <h2 class="text-xl font-serif font-bold mb-4">Location</h2>
+                        <p class="text-sm text-gray-500 mb-4 font-sans">${store.map_adress || store.map_address}</p>
+                        <div class="w-full h-80 grayscale hover:grayscale-0 transition duration-700 border border-black">
+                            <iframe 
+                                width="100%" 
+                                height="100%" 
+                                frameborder="0" 
+                                style="border:0" 
+                                src="https://maps.google.com/maps?q=${encodeURIComponent(store.map_adress || store.map_address)}&output=embed" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                `;
+
+                // --- Photos ---
+                const renderImageGrid = (images, emptyMsg) => {
+                    if (!images || images.length === 0) {
+                        return `<div class="p-12 text-center text-gray-400 font-serif italic border border-dashed border-gray-300">${emptyMsg}</div>`;
+                    }
+                    return `
+                        <div class="grid grid-cols-2 gap-4">
+                            ${images.map(img => `
+                                <div class="aspect-[3/4] overflow-hidden">
+                                    <img src="${img.url}" class="w-full h-full object-cover hover:scale-105 transition duration-700">
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                };
+
+                const photosHtml = `
+                    <div class="mb-12">
+                         <!-- Tabs -->
+                        <div class="flex border-b border-gray-200 mb-8 space-x-8">
+                            <button onclick="switchPhotoTab('menu')" id="btn-photo-menu" class="pb-2 text-sm uppercase tracking-widest font-bold border-b-2 border-black transition">Menu</button>
+                            <button onclick="switchPhotoTab('exterior')" id="btn-photo-exterior" class="pb-2 text-sm uppercase tracking-widest font-bold text-gray-400 hover:text-black transition">Exterior</button>
+                            <button onclick="switchPhotoTab('interior')" id="btn-photo-interior" class="pb-2 text-sm uppercase tracking-widest font-bold text-gray-400 hover:text-black transition">Interior</button>
+                        </div>
+                        
+                        <div id="photo-content-area">
+                            <div id="photo-menu" class="animate-fade-in">
+                                ${renderImageGrid(store.menu_images, 'No Menu Photos')}
+                            </div>
+                            <div id="photo-exterior" class="hidden animate-fade-in">
+                                ${renderImageGrid(store.gallery_exterior, 'No Exterior Photos')}
+                            </div>
+                            <div id="photo-interior" class="hidden animate-fade-in">
+                                ${renderImageGrid(store.gallery_interior, 'No Interior Photos')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+
+                // Assemble Main Layout
+                mainContent.innerHTML = `
+                    <!-- Article Header -->
+                    <div class="text-center mb-12">
+                        <p class="text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-4">The Collection</p>
+                        <h1 class="text-5xl md:text-6xl font-serif font-bold text-brand-black mb-6 leading-tight">${store.name}</h1>
+                         <div class="w-20 h-1 bg-black mx-auto mb-8"></div>
+                    </div>
+
+                    <!-- Hero Image -->
+                    <div class="w-full mb-16 shadow-2xl shadow-gray-200">
+                        <img src="${store.image.url}" alt="${store.name}" class="w-full h-auto max-h-[70vh] object-cover">
+                        <p class="mt-2 text-right text-xs text-gray-400 uppercase tracking-widest">Image: ${store.name}</p>
+                    </div>
+
+                     <!-- Intro Text -->
+                    <div class="max-w-2xl mx-auto text-center mb-20">
+                         <p class="text-2xl font-serif italic text-gray-700 leading-relaxed">
+                            "${store.description}"
+                        </p>
+                        <div class="mt-6 text-sm font-bold uppercase tracking-widest flex justify-center items-center gap-2">
+                             <span>Rated</span>
+                             <span class="text-xl">★</span>
+                             <span>${store.rating} / 5.0</span>
+                        </div>
+                    </div>
+
+                    <!-- Main Structure -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                        <!-- Sidebar (Sticky Navigation concept or secondary info) -->
+                        <div class="lg:col-span-4 lg:order-2">
+                             <div class="sticky top-24">
+                                ${basicInfoHtml}
+                                ${mapHtml}
+                             </div>
+                        </div>
+
+                        <!-- Main Column -->
+                        <div class="lg:col-span-8 lg:order-1">
+                            ${photosHtml}
+                            ${kidsInfoHtml}
+                            ${parkingInfoHtml}
+                        </div>
+                    </div>
+
+                    <!-- Back Button -->
+                    <div class="mt-24 text-center border-t border-black pt-12">
+                        <a href="index.html" class="inline-block border border-black px-12 py-4 text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition duration-300">
+                            Back to Collection
+                        </a>
+                    </div>
+                `;
+
+                // Switch Logic
+                window.switchPhotoTab = (subTab) => {
+                    const btns = ['menu', 'exterior', 'interior'];
+
+                    btns.forEach(t => {
+                        const btn = document.getElementById(`btn-photo-${t}`);
+                        if (t === subTab) {
+                            btn.className = 'pb-2 text-sm uppercase tracking-widest font-bold border-b-2 border-black text-brand-black transition';
+                        } else {
+                            btn.className = 'pb-2 text-sm uppercase tracking-widest font-bold text-gray-400 border-b-2 border-transparent hover:text-black transition';
+                        }
+                    });
+
+                    document.getElementById('photo-menu').classList.add('hidden');
+                    document.getElementById('photo-exterior').classList.add('hidden');
+                    document.getElementById('photo-interior').classList.add('hidden');
+
+                    document.getElementById(`photo-${subTab}`).classList.remove('hidden');
+                };
+            }
+        });
+    </script>
+</body>
+
+</html>
