@@ -67,7 +67,7 @@
         <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center text-brand-black hover:text-gray-600 transition group">
                 <span class="mr-2 group-hover:-translate-x-1 transition text-lg">←</span>
-                <span class="font-serif italic font-bold text-lg">Back to Collection</span>
+                <span class="font-serif italic font-bold text-lg">一覧に戻る</span>
             </a>
             <h1 class="text-sm font-bold tracking-[0.2em] uppercase">Gifu Family Morning</h1>
         </div>
@@ -76,7 +76,7 @@
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-6 py-12" id="main-content">
         <div id="loading" class="text-center py-20">
-            <p class="font-serif italic text-2xl text-gray-400">Loading Story...</p>
+            <p class="font-serif italic text-2xl text-gray-400">読み込み中...</p>
         </div>
     </main>
 
@@ -109,8 +109,8 @@
             function showError() {
                 mainContent.innerHTML = `
                     <div class="text-center py-20 border border-black p-12">
-                        <h2 class="text-3xl font-serif font-bold mb-4">Store Not Found</h2>
-                        <a href="index.html" class="underline decoration-1 underline-offset-4 hover:no-underline">Return to Home</a>
+                        <h2 class="text-3xl font-serif font-bold mb-4">店舗が見つかりません</h2>
+                        <a href="index.html" class="underline decoration-1 underline-offset-4 hover:no-underline">ホームに戻る</a>
                     </div>
                 `;
             }
@@ -119,9 +119,9 @@
                 // Helper for Parking Size
                 const translateSize = (type) => {
                     const rawType = Array.isArray(type) ? type[0] : type;
-                    if (rawType === 'Large/Minivan') return 'Large Car';
-                    if (rawType === 'Normal') return 'Normal Car';
-                    if (rawType === 'Light only') return 'Light Car Only';
+                    if (rawType === 'Large/Minivan') return '大型車可';
+                    if (rawType === 'Normal') return '普通車';
+                    if (rawType === 'Light only') return '軽自動車のみ';
                     return rawType;
                 };
 
@@ -135,14 +135,14 @@
 
                 const basicInfoHtml = `
                     <div class="mb-12">
-                        <h2 class="text-3xl font-serif font-bold mb-6 italic">Essential Information</h2>
+                        <h2 class="text-3xl font-serif font-bold mb-6 italic">基本情報</h2>
                         <dl class="border-t border-black">
-                            ${infoRow('Name', store.name)}
-                            ${infoRow('Address', store.adress || store.address)}
-                            ${infoRow('Tel', store.tel)}
-                            ${infoRow('Hours', store.business_hours)}
-                            ${infoRow('Morning', `<span class="text-brand-gold font-bold">${store.morning_hours}</span>`)}
-                            ${infoRow('Closed', store.regular_holiday)}
+                            ${infoRow('店名', store.name)}
+                            ${infoRow('住所', store.adress || store.address)}
+                            ${infoRow('電話番号', store.tel)}
+                            ${infoRow('営業時間', store.business_hours)}
+                            ${infoRow('モーニング', `<span class="text-brand-gold font-bold">${store.morning_hours}</span>`)}
+                            ${infoRow('定休日', store.regular_holiday)}
                         </dl>
                     </div>
                 `;
@@ -151,20 +151,20 @@
                 const parkingDiff = Array.isArray(store.parking_difficulty) ? store.parking_difficulty[0] : store.parking_difficulty;
                 const parkingInfoHtml = `
                     <div class="mb-12 bg-gray-50 p-8 border border-gray-200">
-                        <h2 class="text-2xl font-serif font-bold mb-6">Parking Details</h2>
+                        <h2 class="text-2xl font-serif font-bold mb-6">駐車場</h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
                             <div>
-                                <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">Capacity</p>
-                                <p class="font-serif text-2xl">${store.parking_count} Cars</p>
+                                <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">駐車可能台数</p>
+                                <p class="font-serif text-2xl">${store.parking_count} 台</p>
                             </div>
                             <div>
-                                <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">Space Size</p>
+                                <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">区画の広さ</p>
                                 <p class="font-serif text-2xl">${translateSize(store.parking_size_type)}</p>
                             </div>
                              <div>
-                                <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">Difficulty</p>
+                                <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">停めやすさ</p>
                                 <p class="font-serif text-xl">
-                                    ${parkingDiff === '易' ? 'Easy to Park' : parkingDiff === '普' ? 'Normal' : 'Difficult'}
+                                    ${parkingDiff === '易' ? '停めやすい' : parkingDiff === '普' ? '普通' : '難しい'}
                                 </p>
                             </div>
                         </div>
@@ -177,37 +177,37 @@
                 if (store.kids_menu) {
                     kidsMenuEntry = `
                         <div class="mt-6 border-l-4 border-brand-gold pl-6 py-2 bg-yellow-50/50">
-                            <p class="font-serif font-bold text-lg mb-2">Kids Menu</p>
+                            <p class="font-serif font-bold text-lg mb-2">キッズメニュー</p>
                             <p class="text-gray-700 italic whitespace-pre-wrap">${store.kids_menu}</p>
                         </div>
                     `;
                 } else {
                     kidsMenuEntry = `
                         <div class="flex justify-between items-center py-3 border-b border-gray-200">
-                            <span class="font-serif">Kids Menu</span>
-                            <span class="text-xs uppercase tracking-widest text-gray-400">Not Available</span>
+                            <span class="font-serif">キッズメニュー</span>
+                            <span class="text-xs uppercase tracking-widest text-gray-400">なし</span>
                         </div>
                     `;
                 }
 
                 const kidsInfoHtml = `
                     <div class="mb-12">
-                        <h2 class="text-3xl font-serif font-bold mb-6 italic">Family Amenities</h2>
+                        <h2 class="text-3xl font-serif font-bold mb-6 italic">設備</h2>
                         <div class="border-t border-black pt-6">
                             
                             <div class="flex justify-between items-center py-3 border-b border-gray-200">
-                                <span class="font-serif text-lg">Kids Space</span>
+                                <span class="font-serif text-lg">キッズスペース</span>
                                 <span class="text-xs uppercase tracking-widest ${store.has_kids_space ? 'text-brand-black font-bold' : 'text-gray-400'}">
-                                    ${store.has_kids_space ? 'Available' : 'Unavailable'}
+                                    ${store.has_kids_space ? 'あり' : 'なし'}
                                 </span>
                             </div>
 
                             ${kidsMenuEntry}
 
                             <div class="flex justify-between items-center py-3 mt-4 border-t border-gray-200">
-                                <span class="font-serif text-lg">Wi-Fi Access</span>
+                                <span class="font-serif text-lg">Wi-Fi</span>
                                 <span class="text-xs uppercase tracking-widest ${store.has_wifi ? 'text-brand-black font-bold' : 'text-gray-400'}">
-                                    ${store.has_wifi ? 'Available' : 'Unavailable'}
+                                    ${store.has_wifi ? 'あり' : 'なし'}
                                 </span>
                             </div>
 
@@ -218,7 +218,7 @@
                 // --- Map ---
                 const mapHtml = `
                     <div class="mb-12">
-                        <h2 class="text-xl font-serif font-bold mb-4">Location</h2>
+                        <h2 class="text-xl font-serif font-bold mb-4">アクセス</h2>
                         <p class="text-sm text-gray-500 mb-4 font-sans">${store.map_adress || store.map_address}</p>
                         <div class="w-full h-80 border border-black">
                             <iframe 
@@ -253,20 +253,20 @@
                     <div class="mb-12">
                          <!-- Tabs -->
                         <div class="flex border-b border-gray-200 mb-8 space-x-8">
-                            <button onclick="switchPhotoTab('menu')" id="btn-photo-menu" class="pb-2 text-sm uppercase tracking-widest font-bold border-b-2 border-black transition">Menu</button>
-                            <button onclick="switchPhotoTab('exterior')" id="btn-photo-exterior" class="pb-2 text-sm uppercase tracking-widest font-bold text-gray-400 hover:text-black transition">Exterior</button>
-                            <button onclick="switchPhotoTab('interior')" id="btn-photo-interior" class="pb-2 text-sm uppercase tracking-widest font-bold text-gray-400 hover:text-black transition">Interior</button>
+                            <button onclick="switchPhotoTab('menu')" id="btn-photo-menu" class="pb-2 text-sm uppercase tracking-widest font-bold border-b-2 border-black transition">メニュー</button>
+                            <button onclick="switchPhotoTab('exterior')" id="btn-photo-exterior" class="pb-2 text-sm uppercase tracking-widest font-bold text-gray-400 hover:text-black transition">外観</button>
+                            <button onclick="switchPhotoTab('interior')" id="btn-photo-interior" class="pb-2 text-sm uppercase tracking-widest font-bold text-gray-400 hover:text-black transition">内観</button>
                         </div>
                         
                         <div id="photo-content-area">
                             <div id="photo-menu" class="animate-fade-in">
-                                ${renderImageGrid(store.menu_images, 'No Menu Photos')}
+                                ${renderImageGrid(store.menu_images, 'メニュー写真はありません')}
                             </div>
                             <div id="photo-exterior" class="hidden animate-fade-in">
-                                ${renderImageGrid(store.gallery_exterior, 'No Exterior Photos')}
+                                ${renderImageGrid(store.gallery_exterior, '外観写真はありません')}
                             </div>
                             <div id="photo-interior" class="hidden animate-fade-in">
-                                ${renderImageGrid(store.gallery_interior, 'No Interior Photos')}
+                                ${renderImageGrid(store.gallery_interior, '内観写真はありません')}
                             </div>
                         </div>
                     </div>
@@ -277,7 +277,7 @@
                 mainContent.innerHTML = `
                     <!-- Article Header -->
                     <div class="text-center mb-12">
-                        <p class="text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-4">The Collection</p>
+                        <p class="text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-4">店舗一覧</p>
                         <h1 class="text-5xl md:text-6xl font-serif font-bold text-brand-black mb-6 leading-tight">${store.name}</h1>
                          <div class="w-20 h-1 bg-black mx-auto mb-8"></div>
                     </div>
@@ -285,7 +285,7 @@
                     <!-- Hero Image -->
                     <div class="w-full mb-16 shadow-2xl shadow-gray-200">
                         <img src="${store.image.url}" alt="${store.name}" class="w-full h-auto max-h-[70vh] object-cover">
-                        <p class="mt-2 text-right text-xs text-gray-400 uppercase tracking-widest">Image: ${store.name}</p>
+                        <p class="mt-2 text-right text-xs text-gray-400 uppercase tracking-widest">画像: ${store.name}</p>
                     </div>
 
                      <!-- Intro Text -->
@@ -294,7 +294,7 @@
                             "${store.description}"
                         </p>
                         <div class="mt-6 text-sm font-bold uppercase tracking-widest flex justify-center items-center gap-2">
-                             <span>Rated</span>
+                             <span>評価</span>
                              <span class="text-xl">★</span>
                              <span>${store.rating} / 5.0</span>
                         </div>
@@ -321,7 +321,7 @@
                     <!-- Back Button -->
                     <div class="mt-24 text-center border-t border-black pt-12">
                         <a href="index.html" class="inline-block border border-black px-12 py-4 text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition duration-300">
-                            Back to Collection
+                            一覧に戻る
                         </a>
                     </div>
                 `;
