@@ -97,7 +97,12 @@
         let particles = [];
         function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         class Steam {
-            constructor() { this.reset(); }
+            constructor(isInitial = false) {
+                this.reset();
+                if (isInitial) {
+                    this.y = Math.random() * canvas.height;
+                }
+            }
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = canvas.height + 50;
@@ -116,7 +121,7 @@
                 ctx.fill();
             }
         }
-        function init() { resize(); for (let i = 0; i < 40; i++) particles.push(new Steam()); animate(); }
+        function init() { resize(); for (let i = 0; i < 40; i++) particles.push(new Steam(true)); animate(); }
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
