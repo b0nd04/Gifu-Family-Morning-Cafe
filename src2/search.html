@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Morning Cafe Gifu</title>
+    <!-- Google Fonts: Shippori Mincho for Japanese Serif, Playfair Display for English Serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Shippori+Mincho:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#1a1a1a',
+                            gold: '#c5a059',
+                            gray: '#f4f4f4'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', '"Shippori Mincho"', 'serif'],
+                        sans: ['"Helvetica Neue"', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .font-serif {
+            font-family: 'Playfair Display', 'Shippori Mincho', serif;
+        }
+
+        .editorial-border {
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+        }
+    </style>
+</head>
+
+<body class="tracking-wide">
+
+    <!-- Masthead -->
+    <header class="py-8 mb-12 relative overflow-hidden">
+        <canvas id="header-canvas"
+            class="absolute top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-60"></canvas>
+        <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
+            <div class="border-b border-black pb-8 mb-2">
+                <p class="text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-4">The Complete Guide for</p>
+                <h1 class="text-5xl md:text-7xl font-serif font-bold tracking-tight text-brand-black mb-2">
+                    Family Morning Cafe Gifu
+                </h1>
+                <p class="font-serif italic text-xl text-gray-600">Discover the finest start to your day.</p>
+                <div class="absolute top-0 left-0 mt-8 ml-6">
+                    <a href="index.html"
+                        class="flex items-center text-brand-black hover:text-brand-gold transition group">
+                        <span class="mr-2 group-hover:-translate-x-1 transition text-lg">←</span>
+                        <span class="font-serif italic font-bold text-lg">TOPへ</span>
+                    </a>
+                </div>
+            </div>
+            <div class="border-b border-black w-24 mx-auto"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-4">
+
+        <!-- Search/Filter Section (Minimalist) -->
+        <div class="mb-16">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-gray-200 pb-8">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-brand-black mb-2">条件で絞り込み</h2>
+                    <p class="text-sm text-gray-500 font-sans">検索条件を指定して絞り込む</p>
+                </div>
+                <div class="flex-1 w-full md:w-auto">
+                    <!-- Filters Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                        <!-- Filter: Kids Menu -->
+                        <div class="flex items-center">
+                            <input type="checkbox" id="filter-kids-menu"
+                                class="w-4 h-4 text-brand-black border-gray-300 focus:ring-brand-gold rounded-none cursor-pointer">
+                            <label for="filter-kids-menu"
+                                class="ml-3 text-sm font-bold tracking-wider uppercase cursor-pointer">
+                                キッズメニュー
+                            </label>
+                        </div>
+
+                        <!-- Filter: Parking Difficulty -->
+                        <div class="border-b border-gray-300">
+                            <select id="filter-parking-difficulty"
+                                class="w-full bg-transparent border-none py-2 px-0 text-brand-black font-sans focus:ring-0 cursor-pointer">
+                                <option value="all">停めやすさ: 全て</option>
+                                <option value="易">◎ 停めやすい</option>
+                                <option value="普">○ 普通</option>
+                            </select>
+                        </div>
+
+                        <!-- Filter: Car Type -->
+                        <div class="border-b border-gray-300">
+                            <select id="filter-car-type"
+                                class="w-full bg-transparent border-none py-2 px-0 text-brand-black font-sans focus:ring-0 cursor-pointer">
+                                <option value="all">車種: 全て</option>
+                                <option value="Large/Minivan">大型/ミニバン</option>
+                                <option value="Normal">普通車</option>
+                                <option value="Light only">軽自動車</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-right min-w-[100px]">
+                    <span id="result-count" class="text-4xl font-serif font-bold text-brand-black">0</span>
+                    <span class="block text-xs uppercase tracking-widest text-gray-400">検索結果</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store Grid -->
+        <div id="store-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
+            <!-- Stores will be injected here -->
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-24 py-12 border-t border-black text-center">
+        <p class="font-serif text-2xl italic mb-4">Family Morning Cafe Gifu</p>
+        <p class="text-xs font-bold tracking-widest uppercase text-gray-400">
+            &copy; 2024 All Rights Reserved.
+        </p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('header-canvas');
+            const ctx = canvas.getContext('2d');
+            let frameId;
+
+            let width, height;
+            const particles = [];
+            const particleCount = 25; // Number of "light spots"
+
+            function resize() {
+                width = canvas.width = canvas.offsetWidth;
+                height = canvas.height = canvas.offsetHeight;
+            }
+
+            class Particle {
+                constructor() {
+                    this.reset(Math.random() * width, Math.random() * height + height / 2);
+                }
+
+                reset(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.radius = Math.random() * 80 + 40; // Large, soft blur
+                    this.speedY = Math.random() * 0.3 + 0.1; // Very slow rising
+                    this.opacity = Math.random() * 0.3 + 0.1;
+                    this.hue = Math.random() * 40 + 30; // 30-70 (Orange/Gold to Warm Yellow)
+                }
+
+                update() {
+                    this.y -= this.speedY;
+                    if (this.y + this.radius < 0) {
+                        this.reset(Math.random() * width, height + this.radius);
+                    }
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    // Radial Gradient for soft light
+                    const gradient = ctx.createRadialGradient(
+                        this.x, this.y, 0,
+                        this.x, this.y, this.radius
+                    );
+                    gradient.addColorStop(0, `hsla(${this.hue}, 80%, 60%, ${this.opacity})`);
+                    gradient.addColorStop(1, `hsla(${this.hue}, 80%, 60%, 0)`);
+
+                    ctx.fillStyle = gradient;
+                    ctx.globalCompositeOperation = 'lighter'; // Additive blending
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalCompositeOperation = 'source-over';
+                }
+            }
+
+            function init() {
+                resize();
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+                animate();
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                frameId = requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', resize);
+            init();
+        });
+    </script>
+</body>
+
+</html>
