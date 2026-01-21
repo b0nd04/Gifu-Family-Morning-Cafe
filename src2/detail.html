@@ -243,8 +243,8 @@
                     return `
                         <div class="grid grid-cols-6 gap-4">
                             ${images.map(img => `
-                                <div class="aspect-[3/4] overflow-hidden">
-                                    <img src="${img.url}" class="w-full h-full object-cover hover:scale-105 transition duration-700">
+                                <div class="aspect-[3/4] overflow-hidden cursor-pointer group" onclick="openModal('${img.url}')">
+                                    <img src="${img.url}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                                 </div>
                             `).join('')}
                         </div>
@@ -347,9 +347,45 @@
 
                     document.getElementById(`photo-${subTab}`).classList.remove('hidden');
                 };
+
+                // --- Modal Logic ---
+                window.openModal = (imageUrl) => {
+                    const modal = document.getElementById('image-modal');
+                    const modalImg = document.getElementById('modal-image');
+                    modalImg.src = imageUrl;
+                    modal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                };
+
+                window.closeModal = () => {
+                    const modal = document.getElementById('image-modal');
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    setTimeout(() => {
+                        document.getElementById('modal-image').src = '';
+                    }, 200);
+                };
             }
         });
     </script>
+
+    <!-- Image Modal Overlay -->
+    <div id="image-modal"
+        class="fixed inset-0 z-[100] bg-brand-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-all duration-300"
+        onclick="closeModal()">
+        <div class="relative max-w-5xl max-h-[90vh] w-full flex items-center justify-center">
+            <!-- Image -->
+            <img id="modal-image" src="" class="max-w-full max-h-[85vh] object-contain shadow-2xl border-4 border-white"
+                onclick="event.stopPropagation()">
+
+            <!-- Close Button -->
+            <button onclick="closeModal()"
+                class="absolute -top-12 right-0 text-white hover:text-brand-gold transition text-sm tracking-widest font-bold uppercase flex items-center gap-2">
+                <span>Close</span>
+                <span class="text-2xl">×</span>
+            </button>
+        </div>
+    </div>
 </body>
 
 </html>
