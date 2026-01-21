@@ -58,9 +58,18 @@
 <body class="tracking-wide">
 
     <!-- Masthead -->
-    <header class="py-8 mb-12 relative overflow-hidden">
+    <header class="pt-16 pb-8 md:py-8 mb-12 relative overflow-hidden">
         <canvas id="header-canvas"
             class="absolute top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-60"></canvas>
+        <div class="absolute inset-0 w-full h-full pointer-events-none z-20">
+            <div class="max-w-7xl mx-auto px-6">
+                <a href="index.html"
+                    class="pointer-events-auto inline-flex items-center text-brand-black hover:text-brand-gold transition group mt-4">
+                    <span class="mr-2 group-hover:-translate-x-1 transition text-lg">←</span>
+                    <span class="font-serif italic font-bold text-lg">TOPへ</span>
+                </a>
+            </div>
+        </div>
         <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
             <div class="border-b border-black pb-8 mb-2">
                 <p class="text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-4">The Complete Guide for</p>
@@ -68,13 +77,7 @@
                     Family Morning Cafe Gifu
                 </h1>
                 <p class="font-serif italic text-xl text-gray-600">Discover the finest start to your day.</p>
-                <div class="absolute top-0 left-0 mt-8 ml-6">
-                    <a href="index.html"
-                        class="flex items-center text-brand-black hover:text-brand-gold transition group">
-                        <span class="mr-2 group-hover:-translate-x-1 transition text-lg">←</span>
-                        <span class="font-serif italic font-bold text-lg">TOPへ</span>
-                    </a>
-                </div>
+
             </div>
             <div class="border-b border-black w-24 mx-auto"></div>
         </div>

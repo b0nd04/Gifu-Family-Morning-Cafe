@@ -67,14 +67,20 @@
     <!-- Header (Simple) -->
     <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-black">
         <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="search.html" class="flex items-center text-brand-black hover:text-brand-gold transition group">
-                <span class="mr-2 group-hover:-translate-x-1 transition text-lg">←</span>
-                <span class="font-serif italic font-bold text-lg">一覧に戻る</span>
-            </a>
-            <a href="index.html" class="flex items-center text-brand-black hover:text-brand-gold transition group mr-4">
-                <span class="font-serif italic font-bold text-sm">TOPへ</span>
-            </a>
-            <h1 class="text-sm font-bold tracking-[0.2em] uppercase">Gifu Family Morning</h1>
+            <div class="flex items-center gap-4">
+                <a href="search.html"
+                    class="flex items-center text-brand-black hover:text-brand-gold transition group whitespace-nowrap">
+                    <span class="mr-1 group-hover:-translate-x-1 transition text-lg">←</span>
+                    <span class="font-serif italic font-bold text-lg hidden md:inline">一覧に戻る</span>
+                    <span class="font-serif italic font-bold text-lg md:hidden">戻る</span>
+                </a>
+                <a href="index.html"
+                    class="flex items-center text-brand-black hover:text-brand-gold transition group whitespace-nowrap">
+                    <span class="font-serif italic font-bold text-sm">TOPへ</span>
+                </a>
+            </div>
+            <h1 class="text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase truncate ml-4">Gifu Family Morning
+            </h1>
         </div>
     </header>
 
@@ -166,137 +172,15 @@
                                 <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">区画の広さ</p>
                                 <p class="font-serif text-2xl">${translateSize(store.parking_size_type)}</p>
                             </div>
-                         </div>
-                        
-                        <!-- Parking Simulator -->
-                        <div class="mt-8 border-t border-stone-200 pt-6">
-                            <p class="text-xs uppercase tracking-widest text-gray-500 mb-4">駐車シミュレーション（停めやすさ: ${parkingDiff === '易' ? '易' : parkingDiff === '普' ? '普通' : '難'}）</p>
-                            <div class="w-full h-40 bg-white border border-stone-300 relative rounded-sm overflow-hidden" id="parking-sim-container">
-                                <canvas id="parking-canvas" class="w-full h-full"></canvas>
+                            <div>
+                                <p class="text-xs uppercase tracking-widest text-gray-500 mb-1">停めやすさ</p>
+                                <p class="font-serif text-2xl">
+                                    ${parkingDiff === '易' ? '停めやすい' : parkingDiff === '普' ? '普通' : '難しい'}
+                                </p>
                             </div>
-                            <p class="text-[10px] text-gray-400 mt-2 text-right">*大型ミニバン（全長4.9m想定）でのイメージ</p>
-                        </div>
+                         </div>
                     </div>
                 `;
-
-                // Draw Parking Simulation (after HTML insertion)
-                setTimeout(() => {
-                    const canvas = document.getElementById('parking-canvas');
-                    if (canvas) {
-                        const ctx = canvas.getContext('2d');
-                        const container = document.getElementById('parking-sim-container');
-                        canvas.width = container.offsetWidth;
-                        canvas.height = container.offsetHeight;
-
-                        const w = canvas.width;
-                        const h = canvas.height;
-                        const difficulty = parkingDiff; // '易', '普', '難' or raw value
-
-                        // Settings
-                        const carColor = '#FFB347';
-                        const usageRatio = difficulty === '易' ? 0.6 : difficulty === '普' ? 0.45 : 0.35;
-                        // Space width relative to car width: Easy=Wide, Normal=Std, Hard=Tight
-
-                        // Car Dimensions (Scaled relative to canvas height to fit)
-                        // Assume parking slot is vertical. 
-                        // Car: 1.85m x 4.9m approx ratio 1:2.6
-                        const carW = h * 0.35;
-                        const carH = carW * 2.2;
-
-                        // Slot Width
-                        let slotW = carW * 1.5; // Default Wide
-                        if (difficulty === '普') slotW = carW * 1.3;
-                        if (difficulty === '難' || difficulty === 'Difficult') slotW = carW * 1.1; // Tight
-
-                        const centerX = w / 2;
-                        const centerY = h / 2;
-
-                        // Draw Background (Asphalt-ish)
-                        ctx.fillStyle = '#f5f5f4';
-                        ctx.fillRect(0, 0, w, h);
-
-                        // Draw Lines (White)
-                        ctx.strokeStyle = '#e5e7eb';
-                        ctx.lineWidth = 2;
-
-                        // Grid pattern
-                        ctx.beginPath();
-                        for (let i = 0; i < w; i += 20) { ctx.moveTo(i, 0); ctx.lineTo(i, h); }
-                        for (let i = 0; i < h; i += 20) { ctx.moveTo(0, i); ctx.lineTo(w, i); }
-                        ctx.stroke();
-
-                        // Draw Parking Slot Lines (Bold White/Grey)
-                        ctx.strokeStyle = '#a8a29e';
-                        ctx.lineWidth = 4;
-                        ctx.beginPath();
-                        // Left Line
-                        const slotLeft = centerX - slotW / 2;
-                        const slotRight = centerX + slotW / 2;
-
-                        ctx.moveTo(slotLeft, 10);
-                        ctx.lineTo(slotLeft, h - 10);
-
-                        ctx.moveTo(slotRight, 10);
-                        ctx.lineTo(slotRight, h - 10);
-
-                        // Back stopper
-                        ctx.moveTo(slotLeft, 10);
-                        ctx.lineTo(slotRight, 10);
-                        ctx.stroke();
-
-                        // Draw Obstacles for 'Hard'
-                        if (difficulty === '難' || difficulty === 'Difficult') {
-                            ctx.fillStyle = '#d6d3d1';
-                            // Wall on left
-                            ctx.fillRect(slotLeft - 40, 0, 35, h);
-                            ctx.fillStyle = '#78716c';
-                            ctx.fillText('WALL', slotLeft - 35, h / 2);
-                        }
-
-                        // Draw Car
-                        // Position car in the slot
-                        const carX = centerX - carW / 2;
-                        const carY = h - carH - 20; // Parked
-
-                        // Car Body
-                        ctx.fillStyle = carColor;
-                        // Rounded rect
-                        roundRect(ctx, carX, carY, carW, carH, 8);
-                        ctx.fill();
-
-                        // Windshield
-                        ctx.fillStyle = '#fff';
-                        ctx.globalAlpha = 0.6;
-                        ctx.fillRect(carX + 4, carY + carH * 0.2, carW - 8, carH * 0.15);
-                        ctx.globalAlpha = 1.0;
-
-                        // Tech Specs Text
-                        ctx.fillStyle = '#57534e';
-                        ctx.font = '10px "Helvetica Neue"';
-                        ctx.fillText('4900mm', centerX + slotW / 2 + 5, h / 2);
-
-                        // Dimensions Arrow
-                        ctx.beginPath();
-                        ctx.moveTo(centerX + slotW / 2 + 2, carY);
-                        ctx.lineTo(centerX + slotW / 2 + 2, carY + carH);
-                        ctx.strokeStyle = '#57534e';
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
-
-                    }
-                }, 100);
-
-                function roundRect(ctx, x, y, w, h, r) {
-                    if (w < 2 * r) r = w / 2;
-                    if (h < 2 * r) r = h / 2;
-                    ctx.beginPath();
-                    ctx.moveTo(x + r, y);
-                    ctx.arcTo(x + w, y, x + w, y + h, r);
-                    ctx.arcTo(x + w, y + h, x, y + h, r);
-                    ctx.arcTo(x, y + h, x, y, r);
-                    ctx.arcTo(x, y, x + w, y, r);
-                    ctx.closePath();
-                }
 
                 // --- Kids Info ---
                 // Conditional Kids Menu
