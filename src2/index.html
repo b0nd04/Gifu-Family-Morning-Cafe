@@ -58,8 +58,10 @@
 <body class="tracking-wide">
 
     <!-- Masthead -->
-    <header class="py-8 mb-12">
-        <div class="max-w-7xl mx-auto px-6 text-center">
+    <header class="py-8 mb-12 relative overflow-hidden">
+        <canvas id="header-canvas"
+            class="absolute top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-60"></canvas>
+        <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
             <div class="border-b border-black pb-8 mb-2">
                 <p class="text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-4">The Complete Guide for</p>
                 <h1 class="text-5xl md:text-7xl font-serif font-bold tracking-tight text-brand-black mb-2">
@@ -143,6 +145,81 @@
     <!-- Scripts -->
     <script src="api.js"></script>
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('header-canvas');
+            const ctx = canvas.getContext('2d');
+            let frameId;
+
+            let width, height;
+            const particles = [];
+            const particleCount = 25; // Number of "light spots"
+
+            function resize() {
+                width = canvas.width = canvas.offsetWidth;
+                height = canvas.height = canvas.offsetHeight;
+            }
+
+            class Particle {
+                constructor() {
+                    this.reset(Math.random() * width, Math.random() * height + height / 2);
+                }
+
+                reset(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.radius = Math.random() * 80 + 40; // Large, soft blur
+                    this.speedY = Math.random() * 0.3 + 0.1; // Very slow rising
+                    this.opacity = Math.random() * 0.3 + 0.1;
+                    this.hue = Math.random() * 40 + 30; // 30-70 (Orange/Gold to Warm Yellow)
+                }
+
+                update() {
+                    this.y -= this.speedY;
+                    if (this.y + this.radius < 0) {
+                        this.reset(Math.random() * width, height + this.radius);
+                    }
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    // Radial Gradient for soft light
+                    const gradient = ctx.createRadialGradient(
+                        this.x, this.y, 0,
+                        this.x, this.y, this.radius
+                    );
+                    gradient.addColorStop(0, `hsla(${this.hue}, 80%, 60%, ${this.opacity})`);
+                    gradient.addColorStop(1, `hsla(${this.hue}, 80%, 60%, 0)`);
+
+                    ctx.fillStyle = gradient;
+                    ctx.globalCompositeOperation = 'lighter'; // Additive blending
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalCompositeOperation = 'source-over';
+                }
+            }
+
+            function init() {
+                resize();
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+                animate();
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                frameId = requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', resize);
+            init();
+        });
+    </script>
 </body>
 
 </html>
