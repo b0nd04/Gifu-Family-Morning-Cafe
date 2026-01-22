@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>店舗詳細 - Family Morning Cafe Gifu</title>
+    <meta name="description" content="岐阜県のモーニングカフェ詳細情報ページ。メニュー写真、駐車場の広さ、キッズスペースの有無など、家族で行くために必要な情報を詳しく紹介しています。">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,9 +79,10 @@
                     class="flex items-center text-brand-black hover:text-brand-gold transition group whitespace-nowrap">
                     <span class="font-serif italic font-bold text-sm">TOPへ</span>
                 </a>
+                </a>
             </div>
-            <h1 class="text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase truncate ml-4">Gifu Family Morning
-            </h1>
+            <div class="text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase truncate ml-4">Gifu Family Morning
+            </div>
         </div>
     </header>
 
@@ -188,7 +190,7 @@
                 if (store.kids_menu) {
                     kidsMenuEntry = `
                         <div class="mt-6 border-l-4 border-brand-gold pl-6 py-2 bg-yellow-50/50">
-                            <p class="font-serif font-bold text-lg mb-2">キッズメニュー</p>
+                            <h3 class="font-serif font-bold text-lg mb-2">キッズメニュー</h3>
                             <p class="text-gray-700 italic whitespace-pre-wrap">${store.kids_menu}</p>
                         </div>
                     `;
@@ -302,7 +304,7 @@
 
                     <!-- Hero Image -->
                     <div class="w-full mb-16 shadow-2xl shadow-gray-200">
-                        <img src="${store.image.url}" alt="${store.name}" class="w-full h-auto max-h-[70vh] object-cover">
+                        <img src="${store.image.url}" alt="${store.name}" class="w-full h-auto max-h-[70vh] object-cover" fetchpriority="high">
                         <p class="mt-2 text-right text-xs text-gray-400 uppercase tracking-widest">画像: ${store.name}</p>
                     </div>
 
