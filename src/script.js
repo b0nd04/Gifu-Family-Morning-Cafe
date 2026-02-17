@@ -48,8 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (target === '普') {
                     // Easy or Normal (Reject Difficult)
                     if (diff === '難') return false;
+                } else if (target === '難') {
+                    // Accept everything (Easy, Normal, Difficult)
+                    return true;
                 }
-                // If target is '難', accept everything (Easy, Normal, Difficult)
             }
 
             if (criteria.carType !== 'all') {
